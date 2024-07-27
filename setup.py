@@ -10,17 +10,19 @@ CLASSIFIERS = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Topic :: Database",
-    "Topic :: Internet"
 ]
 
 REQUIREMENTS = [
     'pandas',
+    'numpy',
+    'patsy',
+    'typing'
 ]
 
 PROJECT_URLS = {
     #"Bug Tracker": "https://github.com/salvnetto/pyreglin",
     #"Documentation": "https://salvnetto.github.io/pyreglin",
-    #"Source Code": "https://github.com/salvnetto/pyreglin",
+    "Source Code": "https://github.com/salvnetto/pyreglin",
 }
 
 setup(
@@ -31,6 +33,8 @@ setup(
     long_description= README,
     long_description_content_type= "text/markdown",
     url= "https://github.com/salvnetto/pyreglin",
+    author= "Fábio N. Demarqui",
+    author_email= "fndemarqui@est.ufmg.br",
     maintainer= "Salvador Netto",
     maintainer_email= "salvv.netto@gmail.com",
     license= "MIT",
