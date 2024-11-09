@@ -16,7 +16,9 @@ REQUIREMENTS = [
     'pandas',
     'numpy',
     'patsy',
-    'typing'
+    'typing',
+    'statsmodels',
+    'spicy'
 ]
 
 PROJECT_URLS = {
