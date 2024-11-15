@@ -1,17 +1,25 @@
-from typing import Optional, Union, Dict, Any
-import warnings
+from typing import Optional, Union
 import numpy as np
 import pandas as pd
 import patsy
 from numpy.typing import ArrayLike
 
+def offset(term):
+    return term
+
+def find_offset_position(lst):
+    indexes = []
+    for i, item in enumerate(lst):
+        if 'offset' in item:
+            indexes.append(i)
+    
+    return indexes
 
 def rlm(
         formula: str, 
         beta: ArrayLike, 
         sigma: Union[float, np.ndarray], 
-        data: Optional[pd.DataFrame] = None,
-        contrasts: Optional[Dict[str, Any]] = None,
+        data: pd.DataFrame = None,
         random_state: Optional[int] = None
         ) -> np.ndarray:
     
@@ -21,17 +29,15 @@ def rlm(
     Parameters
     ----------
     formula : str
-        A formula containing the linear predictor in patsy syntax.
-        Example: "y ~ x1 + x2"
+        A formula containing the linear predictor.
+        Example: "x1 + x2"
     beta : array-like
         Vector of regression coefficients.
     sigma : float or numpy.ndarray
         Error standard deviation. Can be a scalar or a vector with the same 
         length as the number of rows in `data`.
-    data : pandas.DataFrame, optional
+    data : pandas.DataFrame
         A DataFrame containing the covariates entering the linear predictor.
-    contrasts : dict, optional
-        Dictionary specifying contrasts for categorical variables in `data`.
     random_state : int, optional
         Seed for random number generation. For reproducibility.
 
@@ -58,7 +64,7 @@ def rlm(
     ...     'x1': np.random.normal(0, 1, 100),
     ...     'x2': np.random.normal(0, 1, 100)
     ... })
-    >>> y = rlm("y ~ x1 + x2", beta=[1, 2, 3], sigma=0.5, data=data)
+    >>> y = rlm("x1 + x2", beta=[1, 2, 3], sigma=0.5, data=data)
 
     Notes
     -----
@@ -75,7 +81,8 @@ def rlm(
     
     if not isinstance(data, pd.DataFrame):
         raise TypeError("data must be a pandas DataFrame")
-        
+
+
     # Convert beta to numpy array for consistency
     beta = np.asarray(beta)
     
@@ -92,7 +99,17 @@ def rlm(
     
     try:
         # Generate design matrix
-        X = patsy.dmatrix(formula, data, NA_action="raise", contrasts=contrasts)
+        eval_env = patsy.EvalEnvironment.capture(0)
+        X = patsy.dmatrix(formula, data, NA_action="raise", eval_env=eval_env)
+        
+        # Extract offset terms
+        design_terms = X.design_info.column_names
+        offset_position = find_offset_position(design_terms)
+        if offset_position:
+            offset_values = X[:, offset_position].sum(axis=1)  # Combine offsets
+            X = np.delete(X, offset_position, axis=1)  # Remove offset columns from X
+        else:
+            offset_values = 0
     except Exception as e:
         raise ValueError(f"Error in formula processing: {str(e)}")
     
@@ -105,14 +122,6 @@ def rlm(
         )
     
     # Generate response
-    y = X.dot(beta) + np.random.normal(0, sigma)
-    
-    # Warning for potential numerical instability
-    if np.any(np.abs(y) > 1e10):
-        warnings.warn(
-            "Very large response values detected. "
-            "Consider scaling your predictors or coefficients.",
-            RuntimeWarning
-        )
+    y = X.dot(beta) + offset_values + np.random.normal(0, sigma)
     
     return y
