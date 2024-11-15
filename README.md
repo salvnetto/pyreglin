@@ -5,7 +5,7 @@ A Python package for generating response variables with linear regression struct
 ## Installation
 
 ```bash
-pip install rlm
+pip install pyreglin
 ```
 
 ## Usage
