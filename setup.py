@@ -14,9 +14,13 @@ CLASSIFIERS = [
 
 
 # Read requirements from requirements.txt
-with open('requirements.txt') as f:
-    REQUIREMENTS = f.read().splitlines()
-
+REQUIREMENTS = [
+    'numpy==2.1.3',
+    'pandas==2.2.3',
+    'patsy==1.0.1',
+    'scipy==1.14.1',
+    'statsmodels==0.14.4'
+]
 
 PROJECT_URLS = {
     #"Bug Tracker": "https://github.com/salvnetto/pyreglin",
@@ -26,7 +30,7 @@ PROJECT_URLS = {
 
 setup(
     name='pyreglin',
-    version='0.1.0',
+    version='0.1.2',
     description= "A Python package for generating response variables with linear regression structure.",
     packages= find_packages(),
     long_description= README,
