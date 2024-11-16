@@ -1,13 +1,11 @@
-from typing import Optional, Union
 import numpy as np
 import pandas as pd
 import patsy
-from numpy.typing import ArrayLike
 
 def offset(term):
     return term
 
-def find_offset_position(lst):
+def _find_offset_position(lst):
     indexes = []
     for i, item in enumerate(lst):
         if 'offset' in item:
@@ -17,10 +15,10 @@ def find_offset_position(lst):
 
 def rlm(
         formula: str, 
-        beta: ArrayLike, 
-        sigma: Union[float, np.ndarray], 
+        beta: list[float, int], 
+        sigma: float | int | list[float | int], 
         data: pd.DataFrame = None,
-        random_state: Optional[int] = None
+        random_state: int | None = None
         ) -> np.ndarray:
     
     """
@@ -31,9 +29,9 @@ def rlm(
     formula : str
         A formula containing the linear predictor.
         Example: "x1 + x2"
-    beta : array-like
+    beta : list[float, int]
         Vector of regression coefficients.
-    sigma : float or numpy.ndarray
+    sigma : float | int | list[float | int]
         Error standard deviation. Can be a scalar or a vector with the same 
         length as the number of rows in `data`.
     data : pandas.DataFrame
@@ -104,7 +102,7 @@ def rlm(
         
         # Extract offset terms
         design_terms = X.design_info.column_names
-        offset_position = find_offset_position(design_terms)
+        offset_position = _find_offset_position(design_terms)
         if offset_position:
             offset_values = X[:, offset_position].sum(axis=1)  # Combine offsets
             X = np.delete(X, offset_position, axis=1)  # Remove offset columns from X

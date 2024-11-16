@@ -12,14 +12,11 @@ CLASSIFIERS = [
     "Topic :: Database",
 ]
 
-REQUIREMENTS = [
-    'pandas',
-    'numpy',
-    'patsy',
-    'typing',
-    'statsmodels',
-    'spicy'
-]
+
+# Read requirements from requirements.txt
+with open('requirements.txt') as f:
+    REQUIREMENTS = f.read().splitlines()
+
 
 PROJECT_URLS = {
     #"Bug Tracker": "https://github.com/salvnetto/pyreglin",
@@ -37,7 +34,7 @@ setup(
     url= "https://github.com/salvnetto/pyreglin",
     author= "Fábio N. Demarqui",
     author_email= "fndemarqui@est.ufmg.br",
-    maintainer= "Salvador Netto",
+    maintainer= "Salvador Netto, Tomás Bernardes",
     maintainer_email= "salvv.netto@gmail.com",
     license= "MIT",
     platforms="any",

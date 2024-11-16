@@ -1,22 +1,40 @@
-from typing import Optional, Union
-
 import numpy as np
 import pandas as pd
-import statsmodels.formula.api as smf
-from spicy import stats
+import statsmodels.api as sm
+from scipy import stats
 
-def tab_anova(model):
+def tab_anova(
+        model: sm.regression.linear_model.RegressionResultsWrapper
+        ) -> pd.DataFrame:
     """
-    Generate the ANOVA table for linear models
+    Generate the ANOVA table for linear models.
 
-    Args:
-        model (object):A fitted linear model of the type statsmodel
+    Parameters
+    ----------
+    model: statsmodels OLS fit object 
+        A fitted linear model of the type statsmodel
 
-    Returns:
-        pandas.DataFrame: The ANOVA table as a pandas DataFrame.
+    Returns
+    -------
+    pandas.DataFrame
+        The ANOVA table as a pandas DataFrame.
 
-    Raises:
-        TypeError: If the input model is not an instance of OLS.
+    Raises
+    ------
+    TypeError 
+        If the input model is not an instance of OLS.
+    
+    Examples
+    --------
+    >>> import statsmodels.api as sm
+    >>> import statsmodels.formula.api as smf
+    >>> dat = sm.datasets.get_rdataset("Guerry", "HistData").data
+    >>> results = smf.ols('Lottery ~ Literacy + np.log(Pop1831)', data=dat).fit()
+    >>> anova = tab_anova(results)
+
+    See Also
+    --------
+    statsmodels.api.OLS : For more information about Statsmodels OLS fit
     """
     
     mf = model.model.data.frame
@@ -26,6 +44,7 @@ def tab_anova(model):
     p = X.shape[1]
     r = model.resid
     gl_res = model.df_resid
+
     if model.model.exog_names[0] == 'Intercept':
         gl_total = n-1
         SQTotal = np.sum((y - np.mean(y))**2)
@@ -49,6 +68,7 @@ def tab_anova(model):
 
     })
     anova_df.index= ["Model", "Error", "Total"]
-    print("Analysis of Variance Table \n")
-    
+
+    print("Analysis of Variance Table")
+    print(anova_df)
     return anova_df
