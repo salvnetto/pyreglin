@@ -32,17 +32,17 @@ def load_data(
     Parameters
     ----------
     dataset_name : str
-        Name of the dataset (``{name}``).
+        Name of the dataset ``{name}``.
     kwargs : keys and values, optional
         Additional keyword arguments are passed to passed through to
         :func:`pandas.read_csv`.
 
     Returns
     -------
-    df : :class:`pandas.DataFrame`
+    pandas.DataFrame
 
     """
-    if isinstance(dataset_name, str):
+    if not isinstance(dataset_name, str):
         error = (
             """
             This function accepts only strings (the name of an example dataset). 
