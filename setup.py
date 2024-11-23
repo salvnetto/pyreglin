@@ -19,7 +19,9 @@ REQUIREMENTS = [
     'pandas==2.2.3',
     'patsy==1.0.1',
     'scipy==1.14.1',
-    'statsmodels==0.14.4'
+    'statsmodels==0.14.4',
+    'matplotlib==3.8.0',
+    'plotnine==0.12.1'
 ]
 
 PROJECT_URLS = {
@@ -30,7 +32,7 @@ PROJECT_URLS = {
 
 setup(
     name='pyreglin',
-    version='0.1.3',
+    version='0.1.5',
     description= "A Python package for generating response variables with linear regression structure.",
     packages= find_packages(),
     long_description= README,
