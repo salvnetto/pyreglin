@@ -32,7 +32,7 @@ PROJECT_URLS = {
 
 setup(
     name='pyreglin',
-    version='0.1.5',
+    version='1.0.0',
     description= "A Python package for generating response variables with linear regression structure.",
     packages= find_packages(),
     long_description= README,
